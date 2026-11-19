@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>好運能量籤</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@500;900&display=swap" rel="stylesheet">
+<style>
+/* VOICE: warm, gentle, a small daily ritual
+   IDEA: a tear-off daily calendar page that hides a fortune slip
+   PICTURE: the big calendar page itself, flipping to reveal today's line
+   COLOUR and TYPE: sunrise coral field, white paper, deep indigo ink; WenKai handwriting + Noto Sans TC
+   LAYOUT: one centered column — date page, draw button, history below */
+:root{color-scheme:light dark;
+--bg:light-dark(#f6efe0,#15120c);--bg2:light-dark(#ffffff,#221d13);
+--paper:light-dark(#ffffff,#1f1a11);--ink:light-dark(#3b2f18,#f6ecd4);--soft:light-dark(#9a8458,#c2ab78);
+--accent:light-dark(#b8902f,#e0bd63);--on-accent:light-dark(#ffffff,#15120c);--line:light-dark(#efe4c8,#4a3d22);
+--gold:linear-gradient(135deg,#d9b45a,#f5e3a6 45%,#b8902f)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;min-height:100vh;background:linear-gradient(170deg,var(--bg2),var(--bg) 55%);background-attachment:fixed;color:var(--ink);font:16px/1.6 "Noto Sans TC",system-ui,sans-serif;overflow-x:clip}
+main{max-width:560px;margin:0 auto;padding:clamp(24px,5vw,56px) 16px 48px}
+.maker a,.foot a{color:inherit;text-underline-offset:3px}.maker{display:inline-block;margin:0 0 12px;padding:5px 16px;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-size:14px;font-weight:500;background:var(--paper)}
+h1{margin:0 0 4px;font-size:clamp(30px,7vw,42px);line-height:1.1;font-weight:900;color:var(--accent);text-wrap:balance}
+.sub{margin:0 0 24px;color:var(--soft)}
+.cal{position:relative;perspective:1400px}
+.rings{display:flex;justify-content:space-around;padding:0 18%;position:relative;z-index:2;margin-bottom:-12px}
+.rings i{width:14px;height:28px;border-radius:8px;background:var(--gold);box-shadow:inset 0 -6px 0 rgba(0,0,0,.15)}
+.page{position:relative;min-height:420px;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,.7,.2,1)}
+.page.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;background:var(--paper);border-radius:20px;border:1px solid var(--line);box-shadow:0 18px 40px rgba(120,90,30,.16),0 0 0 6px light-dark(#fbf6ea,#1a160e);padding:28px 24px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.back{transform:rotateY(180deg);justify-content:center}
+.top{width:100%;display:flex;justify-content:space-between;color:var(--soft);font-size:15px;border-bottom:2px dashed var(--line);padding-bottom:12px}
+.day{font-size:clamp(110px,30vw,160px);font-weight:900;line-height:1;margin:24px 0 4px;color:var(--accent);font-variant-numeric:tabular-nums}
+.wk{font-size:22px;font-weight:900}
+.hint{margin-top:auto;color:var(--soft);font-size:15px}
+.tag{display:inline-block;padding:4px 14px;border-radius:999px;font-size:14px;font-weight:500;color:#fff;margin-bottom:18px}
+.t0{background:#c9a24a}.t1{background:#b98b5e}.t2{background:#9c7a2e}.t3{background:#a89470}
+.quote{font-family:"LXGW WenKai TC",serif;font-size:clamp(24px,6vw,32px);line-height:1.5;font-weight:700;text-wrap:balance;margin:0 0 18px}
+.no{color:var(--soft);font-size:14px}
+.btns{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
+button{font:inherit;font-size:17px;font-weight:900;min-height:52px;border:0;border-radius:14px;cursor:pointer;padding:0 22px}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+#draw{flex:1 1 220px;background:var(--gold);color:#3b2f18;box-shadow:0 6px 0 #9c7a2e}
+#draw:active{transform:translateY(3px);box-shadow:0 3px 0 #9c7a2e}
+#draw:disabled{opacity:.75;cursor:default;transform:none}
+#copy{background:var(--paper);color:var(--accent);border:1px solid var(--accent)}
+#copy[hidden]{display:none}
+.msg{min-height:24px;margin:10px 0 0;color:var(--soft);font-size:15px}
+section{margin-top:28px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:20px 22px}
+h2{color:var(--accent)}
+h2{margin:0 0 10px;font-size:20px}
+ul{list-style:none;margin:0;padding:0}
+li{display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+li:first-child{border-top:0}
+li b{color:var(--soft);font-weight:500;font-size:14px;white-space:nowrap}
+li span{font-family:"LXGW WenKai TC",serif;font-size:17px}
+.empty{color:var(--soft)}
+[hidden]{display:none!important}
+.login{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:32px 24px;box-shadow:0 18px 40px rgba(120,90,30,.16),0 0 0 6px light-dark(#fbf6ea,#1a160e);text-align:center}
+.login .moon{width:72px;height:72px;margin:0 auto 14px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 8px light-dark(#fbf3dd,#2a2315)}
+.login h2{font-size:24px;margin:0 0 6px}
+.login p{color:var(--soft);margin:0 0 20px}
+.login label{display:block;text-align:start;font-weight:500;margin-bottom:6px}
+.login input{width:100%;font:inherit;font-size:18px;min-height:52px;padding:0 16px;border-radius:14px;border:1.5px solid var(--line);background:light-dark(#fffdf8,#17130c);color:var(--ink)}
+.login input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px light-dark(#f3e6c2,#4a3d22)}
+.login button{width:100%;margin-top:14px;background:var(--gold);color:#3b2f18;box-shadow:0 6px 0 #9c7a2e}
+.err{color:#b4483a;font-size:14px;min-height:20px;margin:8px 0 0;text-align:start}
+.hello{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 18px;flex-wrap:wrap}
+.hello strong{font-size:19px;color:var(--ink)}
+.link{background:none;border:0;min-height:44px;padding:0 4px;color:var(--accent);font-size:15px;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+.foot{margin-top:18px;color:var(--soft);font-size:13px;text-align:center}
+.maker a,.foot a{color:inherit;text-underline-offset:3px}
+@media(prefers-reduced-motion:reduce){.page{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<p class="maker">✦ Even · IG：<a href="https://www.instagram.com/imevennnnn/" target="_blank" rel="noopener">@imevennnnn</a> ✦</p>
+<h1>好運能量籤</h1>
+<p class="sub">每天一句，給自己一點力量。一天只能抽一次喔。</p>
+
+<form class="login" id="login" hidden>
+  <div class="moon" aria-hidden="true"></div>
+  <h2>歡迎來抽小籤</h2>
+  <p>先留下你的名字，再翻開今天的一句話</p>
+  <label for="nm">你的名字</label>
+  <input id="nm" maxlength="20" autocomplete="nickname" placeholder="例如：小美">
+  <p class="err" id="err" aria-live="polite"></p>
+  <button type="submit">進入抽籤</button>
+</form>
+
+<div id="app" hidden>
+<div class="hello"><strong id="hi"></strong><button class="link" id="switch" type="button">換人登錄</button></div>
+<div class="cal">
+  <div class="rings"><i></i><i></i></div>
+  <div class="page" id="page">
+    <div class="face front">
+      <div class="top"><span id="ym"></span><span id="lunar">今日小籤</span></div>
+      <div class="day" id="d"></div>
+      <div class="wk" id="wk"></div>
+      <p class="hint">點下方按鈕，翻開今天的一句話</p>
+    </div>
+    <div class="face back">
+      <span class="tag" id="tag"></span>
+      <p class="quote" id="q"></p>
+      <span class="no" id="no"></span>
+    </div>
+  </div>
+</div>
+
+<div class="btns">
+  <button id="draw" type="button">抽今天的小籤</button>
+  <button id="copy" type="button" hidden>複製分享</button>
+</div>
+<p class="msg" id="msg" aria-live="polite"></p>
+
+<section>
+  <h2>我抽過的小籤</h2>
+  <ul id="hist"></ul>
+</section>
+</div>
+<p class="foot">共 <span id="total"></span> 句 · 抽籤紀錄只存在這台裝置的瀏覽器裡<br>© Even · IG：<a href="https://www.instagram.com/imevennnnn/" target="_blank" rel="noopener">@imevennnnn</a></p>
+</main>
+
+<script>
+{
+const CATS=['今日能量句','正能量','激勵','心情小語'];
+const Q=[
+[
+'今天的你，只要比昨天多勇敢一點點就夠了。','把注意力放在能做的事上，力量就會回來。','今天適合慢慢來，但不適合放棄。','深呼吸三次，你已經準備好了。','好好吃一頓飯，也是照顧自己的方式。',
+'今天就做一件讓未來的自己感謝的小事。','別急著證明什麼，先把眼前這一步走穩。','你的節奏剛剛好，不必跟別人比快慢。','今天，對自己說話溫柔一點。','一杯水、一段路、一次微笑，就是今天的能量來源。',
+'把待辦清單縮小一點，把成就感放大一點。','早晨的光，是給願意起身的人的禮物。','今天的好運，藏在你主動開口的那一刻。','做完一件事，再做下一件，這就是魔法。','允許自己今天只完成七分，剩下的三分交給明天。',
+'今天遇到的每個人，都可能帶給你一點啟發。','先整理桌面，心也會跟著清爽起來。','你不用很厲害才開始，開始了才會變厲害。','今天記得抬頭看看天空。','一個好問題，比十個焦慮更有用。',
+'今天就說一句真心的謝謝吧。','你身上的光，不需要誰批准才能發亮。','把手機放下五分鐘，聽聽自己的聲音。','今天的小進步，是明天的大底氣。','帶著好奇心出門，日常也會變成冒險。',
+'今天的任務：對自己好，對別人善。','能量不夠的時候，就先休息，這不是偷懶。','走出門去曬曬太陽，煩惱會變輕。','今天的你，值得一個大大的肯定。','每一個平凡的今天，都在悄悄成就你。'
+],[
+'生活不一定總是晴天，但你可以成為自己的太陽。','所有的經歷，最後都會變成養分。','世界很大，總有一個角落為你的善良留著位置。','願意相信美好的人，運氣不會太差。','雨停之後，空氣總是特別清新。',
+'你的存在本身，就是一件好事。','微笑是最不花錢、卻最有效的禮物。','心裡有光，走到哪裡都是亮的。','每一次跌倒，都讓你更懂得如何站穩。','好事正在路上，只是需要一點時間。',
+'把抱怨換成感謝，日子會慢慢變甜。','溫柔不是軟弱，而是一種選擇過的力量。','你曾經熬過的難關，都證明你比想像中堅強。','花開有時，你的季節也會來。','和喜歡的人在一起，平凡的日子也會發光。',
+'善意會繞一圈，再回到你身邊。','不完美的日子裡，也有值得記住的瞬間。','每一天都是新的一頁，你可以重新下筆。','心態對了，路就寬了。','你給世界的溫暖，世界都記得。',
+'陽光總會找到縫隙照進來。','珍惜身邊的小確幸，它們加起來就是幸福。','相信自己，是一切美好的起點。','今天的努力，不會白費。','再小的光，也能照亮一個角落。',
+'生命中的好人好事，比你以為的還要多。','用感恩的眼睛看世界，處處都是禮物。','所有的等待，都是為了更好的相遇。','把心打開，幸福才進得來。','你值得被好好對待，包括被你自己。'
+],[
+'夢想不會逃跑，逃跑的往往是自己。','慢一點沒關係，只要不停下來。','現在的辛苦，是為了以後能有更多選擇。','想做的事，就從今天的五分鐘開始。','困難是來測試你有多想要。',
+'別讓「等我準備好」偷走你的時間。','一步一步走，山頂就不遠了。','你的潛力，比你目前看到的還要多。','不是看到希望才堅持，而是堅持了才會看到希望。','害怕的時候，就帶著害怕往前走。',
+'每一次練習，都在拉近你和目標的距離。','失敗只是告訴你，這條路需要換個走法。','不要和別人比，要和昨天的自己比。','專注於過程，結果自然會跟上。','你今天流的汗，會變成明天的底氣。',
+'再試一次，也許就是成功的那一次。','能力是練出來的，信心是做出來的。','不必等到完美才出發，邊走邊修正就好。','把大目標拆成小步驟，每一步都算數。','你比你想像的更能扛。',
+'有些路很難走，但走過就會發光。','走過的每一段彎路，都會讓你更認得方向。','自律的盡頭，是自由。','今天最不想做的事，往往是最該先做的事。','你的努力，時間都看得見。',
+'別放棄，故事還沒寫到最好看的地方。','把「我不行」改成「我試試看」。','勇氣不是不害怕，而是害怕了仍然選擇行動。','機會總是留給已經在路上的人。','撐過這一段，你會感謝現在沒有放棄的自己。'
+],[
+'累了就停一下，風景不會跑掉。','有些情緒不用急著處理，先讓它被看見。','今天不開心也沒關係，明天又是新的一天。','想哭的時候就哭吧，眼淚也是一種整理。','一個人的時光，也可以很美好。',
+'不是每個問題都要今天找到答案。','給自己泡一杯熱茶，心也會跟著暖起來。','你不必討好所有人，先讓自己舒服。','心累的時候，就把世界調成靜音。','放過別人，也是放過自己。',
+'有時候，什麼都不做也是一種療癒。','記得你也是需要被照顧的人。','傍晚的晚霞，是一天最溫柔的結尾。','想念一個人的時候，就讓思念安靜地待一會兒。','生活有點亂也沒關係，慢慢收拾就好。',
+'今晚早點睡，夢裡會有好事發生。','你的感受是真的，值得被認真對待。','偶爾放空，是為了裝進更好的東西。','不想說話的時候，就聽聽喜歡的歌。','和自己和好，是最重要的和好。',
+'把擔心寫下來，它就不會一直在腦中打轉。','下雨天適合窩著，也適合原諒自己。','不用每天都很堅強，柔軟也很好。','心情像天氣，總會放晴的。','給今天的自己一個擁抱。',
+'簡單的日子，也藏著小小的幸福。','你已經做得很好了，真的。','允許自己有低潮，低潮過後就是回升。','走慢一點，才看得見路邊的花。','每一天都是新的開始，今天也要好好愛自己。'
+]];
+const MORE=[
+[
+'今天就是你發光的日子，別藏起來！','醒來的那一刻，你就已經贏了一次。','今天的你，自帶好運和光芒。','帶著笑容出門，今天一定會很順！','今天要大步走、大聲笑、大膽做。',
+'你今天的能量值：滿格！','今天就去做那件你一直想做的事。','相信今天會有好事發生，它就真的會發生。','今天的你，比你想像中更有魅力。','把今天活成你最喜歡的樣子。',
+'今天的每一分努力，都在為你加分。','抬頭挺胸，今天你就是主角。','今天遇到的困難，都只是你的暖身運動。','今天的目標：閃閃發亮，勢不可擋！','你值得擁有一個超棒的今天。',
+'今天就用行動，給自己一個驚喜。','好心情是今天最強的武器。','今天的你，充滿無限可能。','把握今天，今天就是最好的時機。','今天也要元氣滿滿，衝衝衝！'
+],[
+'你本來就很好，而且會越來越好。','所有的好運，都在為你排隊。','你值得世界上所有的美好。','你笑起來的樣子，就是最好的風景。','相信自己，你就已經成功了一半。',
+'你走過的每一步，都在通往更好的地方。','宇宙正在幫你安排最好的一切。','你是別人生命中的那道光。','越努力越幸運，越感恩越富足。','好的事情，正在朝你飛奔而來。',
+'你擁有的，比你以為的還要多。','心朝著陽光，影子自然落在身後。','你的善良，終會被溫柔回報。','每一天，你都在成為更好的自己。','你有讓一切變好的力量。',
+'用愛出發，到哪裡都是幸福。','你是獨一無二的，這就是你最大的優勢。','今天的你，正在被幸運偏愛。','你的未來，一定會閃閃發光。','帶著感恩生活，好運就會一直來敲門。'
+],[
+'你不是普通人，你是正在變強的人。','別人看不到的努力，終會讓所有人看見。','想要的，就自己去拿！','你的極限，遠比你想像的更遠。','今天咬緊牙關，明天就站上高峰。',
+'起點不重要，重要的是你從不停下腳步。','敢做大夢，才配得上你這麼拚。','你只管努力，剩下的交給時間。','困難越大，代表你離成功越近。','每一次堅持，都在打造更強大的你。',
+'沒有到不了的地方，只有還沒出發的人。','你的人生，你說了算！','成功沒有捷徑，但你正走在正確的路上。','把壓力變成動力，把夢想變成現實。','只要你不放棄，就沒有人能打敗你。',
+'今天的汗水，是明天的掌聲。','你可以累，但不可以輸給自己。','做自己的英雄，不必等別人來救。','再難，也要笑著走下去。','相信過程，你一定會到達。'
+],[
+'你的心情很重要，今天也要讓自己開心。','笑一個吧，世界會因為你而變得更好。','今天的好心情，是送給自己最棒的禮物。','煩惱是暫時的，快樂才是你的主場。','對自己說：我很棒，我值得！',
+'心情好，一切都會跟著好起來。','放下昨天的煩惱，迎接今天的陽光。','快樂很簡單，就是喜歡現在的自己。','你的開心，會感染身邊每一個人。','把心情調成晴天模式，出發！',
+'每一個微笑，都是給生活最好的回答。','生活裡的小美好，正在等你發現。','你值得每天都被溫暖包圍。','給自己一點掌聲，你真的很努力了。','今天也要做個快樂的人。',
+'你的心，比你想像的更強大。','保持熱愛，生活就會一直閃閃發亮。','想開了，世界就寬了。','今天的你，心裡住著一個太陽。','帶著好心情，去擁抱每一個美好的瞬間。'
+]];
+const ALL=[];Q.forEach((arr,c)=>arr.forEach(t=>ALL.push({c,t})));MORE.forEach((arr,c)=>arr.forEach(t=>ALL.push({c,t})));
+const $=id=>document.getElementById(id);
+const WK=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+const now=new Date();
+const key=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=key(now);
+$('ym').textContent=now.getFullYear()+' 年 '+(now.getMonth()+1)+' 月';
+$('d').textContent=now.getDate();
+$('wk').textContent=WK[now.getDay()];
+$('total').textContent=ALL.length;
+
+const NK='daily-quote-name';
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+let name='',SK='',hist={};
+const save=()=>lsSet(SK,JSON.stringify(hist));
+function enter(n){
+  name=n;lsSet(NK,n);
+  SK='daily-quote-v1:'+n;
+  try{hist=JSON.parse(lsGet(SK)||'{}')||{}}catch(e){hist={}}
+  const old=lsGet('daily-quote-v1');
+  if(old&&!lsGet(SK)){try{hist=JSON.parse(old)||{}}catch(e){}save();lsSet('daily-quote-v1',null)}
+  $('hi').textContent=n+'，今天也要閃閃發亮 ✦';
+  $('page').classList.remove('flip');
+  $('draw').disabled=false;$('draw').textContent='抽今天的小籤';
+  $('copy').hidden=true;$('msg').textContent='';
+  $('login').hidden=true;$('app').hidden=false;
+  if(hist[today]!=null&&ALL[hist[today]])show(hist[today],false);
+  renderHist();
+}
+$('login').addEventListener('submit',e=>{
+  e.preventDefault();
+  const n=$('nm').value.trim();
+  if(!n){$('err').textContent='請先輸入你的名字喔';$('nm').focus();return}
+  $('err').textContent='';enter(n);
+});
+$('switch').addEventListener('click',()=>{
+  lsSet(NK,null);$('nm').value='';
+  $('app').hidden=true;$('login').hidden=false;$('nm').focus();
+});
+
+function show(i,anim){
+  const it=ALL[i];
+  $('tag').textContent=CATS[it.c];$('tag').className='tag t'+it.c;
+  $('q').textContent=it.t;
+  $('no').textContent='第 '+(i+1)+' 號籤 · '+today;
+  if(anim){requestAnimationFrame(()=>$('page').classList.add('flip'))}else{$('page').classList.add('flip')}
+  $('draw').disabled=true;$('draw').textContent='今天已抽過，明天再來';
+  $('copy').hidden=false;
+  tick();
+}
+function tick(){
+  const t=new Date(),m=new Date(t);m.setHours(24,0,0,0);
+  const s=Math.max(0,Math.floor((m-t)/1000));
+  const h=Math.floor(s/3600),mi=Math.floor(s%3600/60);
+  $('msg').textContent='距離下一次抽籤還有 '+h+' 小時 '+mi+' 分';
+  if(key(t)!==today)location.reload();
+}
+function renderHist(){
+  const ks=Object.keys(hist).sort().reverse().slice(0,14);
+  $('hist').innerHTML=ks.length?ks.map(k=>{const it=ALL[hist[k]];return it?'<li><b>'+k.slice(5).replace('-','/')+'</b><span>'+it.t+'</span></li>':''}).join('')
+    :'<li class="empty">還沒有紀錄，抽下第一支籤吧！</li>';
+}
+$('draw').addEventListener('click',()=>{
+  if(hist[today]!=null)return;
+  const used=new Set(Object.values(hist));
+  let pool=ALL.map((_,i)=>i).filter(i=>!used.has(i));
+  if(!pool.length)pool=ALL.map((_,i)=>i);
+  const i=pool[Math.floor(Math.random()*pool.length)];
+  hist[today]=i;save();show(i,true);renderHist();
+});
+$('copy').addEventListener('click',async()=>{
+  const it=ALL[hist[today]];
+  const txt=name+' 今天抽到的小籤\n【'+CATS[it.c]+'】'+it.t+'\n— 好運能量籤 '+today;
+  try{await navigator.clipboard.writeText(txt);$('msg').textContent='已複製，可以貼給朋友了！'}
+  catch(e){$('msg').textContent='無法自動複製，請長按文字手動複製'}
+  setTimeout(tick,2500);
+});
+{
+  const saved=lsGet(NK);
+  if(saved)enter(saved);else $('login').hidden=false;
+}
+setInterval(()=>{if(hist[today]!=null)tick()},30000);
+}
+</script>
+</body>
+</html>
